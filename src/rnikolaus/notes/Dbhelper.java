@@ -42,6 +42,7 @@ public class Dbhelper extends SQLiteOpenHelper {
 			if (!first){
 				dbDDL+=", ";
 			}
+			first=false;
 			dbDDL+=c.getName();
 			dbDDL+=" ";
 			dbDDL+=c.getDdl();
