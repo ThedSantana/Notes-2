@@ -2,8 +2,9 @@
 <resources>
 
     <string name="app_name">Notes</string>
-    <string name="action_settings">Add Note</string>
+    <string name="add_note">Add Note</string>
     <string name="title_note_list">Notes</string>
     <string name="title_note_detail">Note Detail</string>
+    <string name="save_file">Save file</string>
 
 </resources>

@@ -8,13 +8,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="rnikolaus.notes.NoteDetailFragment" >
 
-
+    <TextView
+    android:id="@+id/dateDisplay"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+     />
+    
 <EditText
     android:id="@+id/editTitle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/dateDisplay"
+    android:layout_below="@+id/dateDisplay"
     android:ems="10"
     android:inputType="text" >
+    <requestFocus />
 </EditText>
 
 <EditText
@@ -26,7 +34,7 @@
     android:layout_marginTop="26dp"
     android:ems="10"
     android:inputType="textMultiLine" >
-<requestFocus />
+
 </EditText>
 
 <Button
@@ -48,6 +56,8 @@
     android:layout_marginTop="16dp"
     android:text="Delete" 
     />
+
+
 
 </RelativeLayout>
 

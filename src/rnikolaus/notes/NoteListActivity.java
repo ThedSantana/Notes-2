@@ -90,12 +90,30 @@ public class NoteListActivity extends FragmentActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_add_note) {
 			create();
+			return true;
+		}else if(id==R.id.action_save_to_file){
+			save();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	public void save() {
+		// TODO Auto-generated method stub
+		String s="";
+		for (Note note:noteDAO.listNotes()){
+			s+=note.getId();
+			s+=";";
+			s+=note.getTitle();
+			s+=";";
+			s+=note.getMessage();
+			s+="\n";
+		}
+		
+	}
+
+
 	public void create(){
 		Note n =noteDAO.createNote("new title", "new message");
 		

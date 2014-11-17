@@ -2,6 +2,7 @@ package rnikolaus.notes;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -36,13 +37,13 @@ public class NoteDAO {
 	}
 	public  Note createNote(String title, String message){
 		ContentValues values = new ContentValues();
-		values.put("title", title);
-		values.put("message", message);
+		values.put(Dbhelper.Columns.TITLE.getName(), title);
+		values.put(Dbhelper.Columns.MESSAGE.getName(), message);
+		values.put(Dbhelper.Columns.DATE.getName(), new Date().getTime());
 		long insertId = database.insert(Dbhelper.TABLE, null,
 		        values);
-		Note note = new Note(insertId);
-		note.setTitle(title);
-		note.setMessage(message);
+		Note note = getNoteById(insertId);
+
 		return note;
 	}
 	public  void modifyTitle(long id, String title){
@@ -82,7 +83,7 @@ public class NoteDAO {
 
 	    cursor.moveToFirst();
 	    while (!cursor.isAfterLast()) {
-	      Note note = createNote(cursor);
+	      Note note = loadNote(cursor);
 	      noteList.add(note);
 	      cursor.moveToNext();
 	    }
@@ -99,7 +100,7 @@ public class NoteDAO {
 
 	    cursor.moveToFirst();
 	    while (!cursor.isAfterLast()) {
-	      Note note = createNote(cursor);
+	      Note note = loadNote(cursor);
 	      noteList.add(note);
 	      cursor.moveToNext();
 	    }
@@ -108,13 +109,15 @@ public class NoteDAO {
 		return noteList.get(0);
 	}
 	
-	private Note createNote(Cursor cursor){
-		long id =cursor.getLong(cursor.getColumnIndex("id"));
-		String title =cursor.getString(cursor.getColumnIndex("title"));
-		String message =cursor.getString(cursor.getColumnIndex("message"));
+	private Note loadNote(Cursor cursor){
+		long id =cursor.getLong(cursor.getColumnIndex(Dbhelper.Columns.ID.getName()));
+		String title =cursor.getString(cursor.getColumnIndex(Dbhelper.Columns.TITLE.getName()));
+		String message =cursor.getString(cursor.getColumnIndex(Dbhelper.Columns.MESSAGE.getName()));
+		long date = cursor.getLong(cursor.getColumnIndex(Dbhelper.Columns.DATE.getName()));
 		Note note = new Note(id);
 		note.setTitle(title);
 		note.setMessage(message);
+		note.setDate(new Date(date));
 		return note;
 	}
 

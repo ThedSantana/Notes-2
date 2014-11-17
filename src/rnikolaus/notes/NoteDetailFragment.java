@@ -1,9 +1,12 @@
 package rnikolaus.notes;
 
+import java.text.DateFormat;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * A fragment representing a single Note detail screen. This fragment is either
@@ -29,6 +33,8 @@ public class NoteDetailFragment extends Fragment {
 	 */
 	private Note mItem;
 
+	private TextView dateDisplay;
+	
 	private EditText editTitle;
 
 	private EditText editMessage;
@@ -84,10 +90,13 @@ public class NoteDetailFragment extends Fragment {
 						new Intent(getActivity(), NoteListActivity.class));
 			}
 		});
+		dateDisplay = (TextView) rootView.findViewById(R.id.dateDisplay);
 		editTitle = (EditText) rootView.findViewById(R.id.editTitle);
 		editMessage = (EditText) rootView.findViewById(R.id.editMessage);
 		// Show the dummy content as text in a TextView.
 		if (mItem != null) {			
+			DateFormat df = DateFormat.getDateTimeInstance();
+			dateDisplay.setText(df.format(mItem.getDate()));
 			editTitle.setText(mItem.getTitle());	
 			editMessage.setText(mItem.getMessage());			
 		}

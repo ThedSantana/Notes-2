@@ -1,11 +1,20 @@
 package rnikolaus.notes;
 
+import java.util.Date;
+
 public class Note {
 private long id;
 private String title;
 private String message;
+private Date date;
 public Note(long id) {
 	this.id = id;
+}
+public Date getDate(){
+	return date;
+}
+public void setDate(Date date){
+	this.date=date;
 }
 public String getTitle() {
 	return title;

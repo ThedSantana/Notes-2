@@ -127,7 +127,9 @@ public class NoteListFragment extends ListFragment {
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
 		//mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
-		mCallbacks.onItemSelected(new ArrayList<Note>(noteDAO.listNotes()).get(position).getId());
+		ArrayList<Note> arrayList = new ArrayList<Note>(noteDAO.listNotes());
+		long id2 = arrayList.get(position).getId();
+		mCallbacks.onItemSelected(id2);
 	}
 
 	@Override
