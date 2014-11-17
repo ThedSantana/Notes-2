@@ -1,11 +1,17 @@
 package rnikolaus.notes;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * An activity representing a list of Notes. This activity has different
@@ -51,7 +57,6 @@ public class NoteListActivity extends FragmentActivity implements
 		}
 	}
 
-
 	/**
 	 * Callback method from {@link NoteListFragment.Callbacks} indicating that
 	 * the item with the given ID was selected.
@@ -77,13 +82,14 @@ public class NoteListActivity extends FragmentActivity implements
 			startActivity(detailIntent);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -93,48 +99,65 @@ public class NoteListActivity extends FragmentActivity implements
 		if (id == R.id.action_add_note) {
 			create();
 			return true;
-		}else if(id==R.id.action_save_to_file){
+		} else if (id == R.id.action_save_to_file) {
 			save();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	public void save() {
-		// TODO Auto-generated method stub
-		String s="";
-		for (Note note:noteDAO.listNotes()){
-			s+=note.getId();
-			s+=";";
-			s+=note.getTitle();
-			s+=";";
-			s+=note.getMessage();
-			s+="\n";
+		Context context = getApplicationContext();
+		File file = new File(context.getExternalFilesDir(null),
+				"notes.txt");
+		PrintStream stream = null;
+		try {
+			
+			stream = new PrintStream(file);
+			for (Note note : noteDAO.listNotes()) {
+				stream.print(note.getId());
+				stream.print(";");
+				stream.print(note.getDate().getTime());
+				stream.print(";");
+				stream.print(note.getTitle());
+				stream.print(";");
+				stream.println(note.getMessage());
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stream.close();
+			} catch (Exception e) {// this includes null pointer from null stream
+				// do nothing
+			}
 		}
 		
+		CharSequence text = "Database saved to:"+file.getAbsolutePath();
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 
+	public void create() {
+		Note n = noteDAO.createNote("new title", "new message");
 
-	public void create(){
-		Note n =noteDAO.createNote("new title", "new message");
-		
 		((NoteListFragment) getSupportFragmentManager().findFragmentById(
 				R.id.note_list)).getArrayAdapter().insert(n, 0);
-				
-		
-	}
-	
-	@Override
-	  public void onResume() {
-	    noteDAO.open();
-	    super.onResume();
-	  }
 
-	  @Override
-	  public void onPause() {
+	}
+
+	@Override
+	public void onResume() {
+		noteDAO.open();
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
 		noteDAO.close();
-	    super.onPause();
-	  }
-	
-	
-	
+		super.onPause();
+	}
+
 }
